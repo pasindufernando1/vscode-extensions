@@ -55,6 +55,8 @@ import {
     TypesFromSymbolResponse,
     UpdateFileContentRequest,
     UpdateFileContentResponse,
+    WSDLConverterRequest,
+    WSDLConverterResponse,
     codeAction,
     definition,
     didChange,
@@ -82,6 +84,7 @@ import {
     getTypeFromExpression,
     getTypeFromSymbol,
     getTypesFromFnDefinition,
+    generateTypesFromWSDL,
     rename,
     stModify,
     updateFileContent,
@@ -215,5 +218,9 @@ export class LangClientRpcClient implements LangClientAPI {
 
     getPackageComponentModels(params: ComponentModelsParams): Promise<ComponentModels> {
         return this._messenger.sendRequest(getPackageComponentModels, HOST_EXTENSION, params);
+    }
+
+    generateTypesFromWSDL(params: WSDLConverterRequest): Promise<WSDLConverterResponse> {
+        return this._messenger.sendRequest(generateTypesFromWSDL, HOST_EXTENSION, params);
     }
 }

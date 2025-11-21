@@ -26,6 +26,7 @@ import {
     RunExternalCommandRequest,
     ShowErrorMessageRequest,
     WorkspaceFileRequest,
+    ApplyWorkspaceEditsRequest,
     executeCommand,
     experimentalEnabled,
     getBallerinaDiagnostics,
@@ -40,7 +41,8 @@ import {
     runBackgroundTerminalCommand,
     selectFileOrDirPath,
     selectFileOrFolderPath,
-    showErrorMessage
+    showErrorMessage,
+    applyWorkspaceEdits
 } from "@wso2/ballerina-core";
 import { Messenger } from "vscode-messenger";
 import { CommonRpcManager } from "./rpc-manager";
@@ -62,4 +64,5 @@ export function registerCommonRpcHandlers(messenger: Messenger) {
     messenger.onNotification(showErrorMessage, (args: ShowErrorMessageRequest) => rpcManger.showErrorMessage(args));
     messenger.onRequest(getCurrentProjectTomlValues, () => rpcManger.getCurrentProjectTomlValues());
     messenger.onRequest(getWorkspaceType, () => rpcManger.getWorkspaceType());
+    messenger.onRequest(applyWorkspaceEdits, (args: ApplyWorkspaceEditsRequest) => rpcManger.applyWorkspaceEdits(args));
 }

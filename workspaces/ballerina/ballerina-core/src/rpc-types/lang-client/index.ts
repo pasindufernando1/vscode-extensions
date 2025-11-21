@@ -16,7 +16,7 @@
  * under the License.
  */
 
-import { BallerinaPackagesParams, BallerinaProjectComponents, BallerinaSTParams, ComponentModels, ComponentModelsParams, ExecutorPositions, PartialST, PartialSTParams, ProjectDiagnosticsRequest, ProjectDiagnosticsResponse, STModifyParams, SymbolInfo, SymbolInfoParams, SyntaxTree, SyntaxTreeParams, TypeFromExpressionParams, TypeFromSymbolParams, TypesFromFnDefinitionParams } from "../../interfaces/extended-lang-client";
+import { BallerinaPackagesParams, BallerinaProjectComponents, BallerinaSTParams, ComponentModels, ComponentModelsParams, ExecutorPositions, PartialST, PartialSTParams, ProjectDiagnosticsRequest, ProjectDiagnosticsResponse, STModifyParams, SymbolInfo, SymbolInfoParams, SyntaxTree, SyntaxTreeParams, TypeFromExpressionParams, TypeFromSymbolParams, TypesFromFnDefinitionParams, WSDLConverterRequest, WSDLConverterResponse } from "../../interfaces/extended-lang-client";
 import { BallerinaVersionResponse, CompletionRequest, CompletionResponse, DiagnosticsResponse, CodeActionRequest, CodeActionResponse, RenameRequest, RenameResponse, DefinitionPositionRequest, UpdateFileContentRequest, UpdateFileContentResponse, DefinitionResponse, ExecutorPositionsRequest, DidCloseRequest, TypesFromExpressionResponse, TypesFromSymbolResponse, DidOpenRequest, DidChangeRequest, SemanticVersion } from "./interfaces";
 
 export interface LangClientAPI {
@@ -50,5 +50,6 @@ export interface LangClientAPI {
     didChange: (params: DidChangeRequest) => void;
     didClose: (params: DidCloseRequest) => void;
     getPackageComponentModels:(params: ComponentModelsParams) => Promise<ComponentModels>;
+    generateTypesFromWSDL: (params: WSDLConverterRequest) => Promise<WSDLConverterResponse>;
 }
 

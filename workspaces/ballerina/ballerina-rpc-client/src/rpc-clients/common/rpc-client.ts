@@ -50,7 +50,10 @@ import {
     selectFileOrFolderPath,
     showErrorMessage,
     WorkspaceTypeResponse,
-    getWorkspaceType
+    getWorkspaceType,
+    ApplyWorkspaceEditsRequest,
+    ApplyWorkspaceEditsResponse,
+    applyWorkspaceEdits
 } from "@wso2/ballerina-core";
 import { HOST_EXTENSION } from "vscode-messenger-common";
 import { Messenger } from "vscode-messenger-webview";
@@ -120,5 +123,9 @@ export class CommonRpcClient implements CommonRPCAPI {
 
     getWorkspaceType(): Promise<WorkspaceTypeResponse> {
         return this._messenger.sendRequest(getWorkspaceType, HOST_EXTENSION);
+    }
+
+    applyWorkspaceEdits(params: ApplyWorkspaceEditsRequest): Promise<ApplyWorkspaceEditsResponse> {
+        return this._messenger.sendRequest(applyWorkspaceEdits, HOST_EXTENSION, params);
     }
 }

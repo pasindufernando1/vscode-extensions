@@ -36,7 +36,8 @@ import {
     useDMQueryClausesPanelStore,
     useDMSearchStore,
     useDMSubMappingConfigPanelStore,
-    useDMExpressionBarStore
+    useDMExpressionBarStore,
+    useDMIOConfigPanelStore
 } from "../../store/store";
 import { KeyboardNavigationManager } from "../../utils/keyboard-navigation-manager";
 import { DataMapperEditorProps } from "../../index";
@@ -51,6 +52,7 @@ import {
 import { SubMappingNodeInitVisitor } from "../../visitors/SubMappingNodeInitVisitor";
 import { SubMappingConfigForm } from "./SidePanel/SubMappingConfig/SubMappingConfigForm";
 import { ClausesPanel } from "./SidePanel/QueryClauses/ClausesPanel";
+import { ImportDataForm } from "./SidePanel/ImportData/ImportDataForm";
 
 const fadeIn = keyframes`
     from { opacity: 0.5; }
@@ -167,6 +169,12 @@ export function DataMapperEditor(props: DataMapperEditorProps) {
         }))
     );
     const { isQueryClausesPanelOpen} = useDMQueryClausesPanelStore();
+    const { isIOConfigPanelOpen, ioConfigPanelType } = useDMIOConfigPanelStore(
+        useShallow(state => ({
+            isIOConfigPanelOpen: state.isIOConfigPanelOpen,
+            ioConfigPanelType: state.ioConfigPanelType
+        }))
+    );
 
     const { resetSearchStore } = useDMSearchStore();
     const { rpcClient } = useRpcContext();
@@ -364,9 +372,14 @@ export function DataMapperEditor(props: DataMapperEditorProps) {
                                 generateForm={generateForm}
                             />
                         )}
+                        {isIOConfigPanelOpen && (
+                            <ImportDataForm
+                                configName={name}
+                            />
+                        )}
                     </>
                 )}
-                
+
             </div>
         </DataMapperErrorBoundary>
     )

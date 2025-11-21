@@ -57,7 +57,9 @@ import {
     TypesFromFnDefinitionParams,
     TypesFromSymbolResponse,
     UpdateFileContentRequest,
-    UpdateFileContentResponse
+    UpdateFileContentResponse,
+    WSDLConverterRequest,
+    WSDLConverterResponse
 } from "@wso2/ballerina-core";
 import { workspace } from "vscode";
 import { URI } from "vscode-uri";
@@ -300,6 +302,13 @@ export class LangClientRpcManager implements LangClientAPI {
         return new Promise(async (resolve) => {
             const diagnostics = await StateMachine.langClient().getProjectDiagnostics(params) as ProjectDiagnosticsResponse;
             resolve(diagnostics);
+        });
+    }
+
+    async generateTypesFromWSDL(params: WSDLConverterRequest): Promise<WSDLConverterResponse> {
+        return new Promise(async (resolve) => {
+            const response = await StateMachine.langClient().generateTypesFromWSDL(params) as WSDLConverterResponse;
+            resolve(response);
         });
     }
 }

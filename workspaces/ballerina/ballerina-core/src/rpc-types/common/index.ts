@@ -32,7 +32,9 @@ import {
     FileOrDirRequest,
     WorkspaceRootResponse,
     ShowErrorMessageRequest,
-    WorkspaceTypeResponse
+    WorkspaceTypeResponse,
+    ApplyWorkspaceEditsRequest,
+    ApplyWorkspaceEditsResponse
 } from "./interfaces";
 
 export interface CommonRPCAPI {
@@ -51,4 +53,5 @@ export interface CommonRPCAPI {
     showErrorMessage: (params: ShowErrorMessageRequest) => void;
     getCurrentProjectTomlValues: () => Promise<Record<string, any>>;
     getWorkspaceType: () => Promise<WorkspaceTypeResponse>;
+    applyWorkspaceEdits: (params: ApplyWorkspaceEditsRequest) => Promise<ApplyWorkspaceEditsResponse>;
 }

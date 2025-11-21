@@ -713,6 +713,17 @@ export interface XMLToRecord {
     diagnostics?: XMLToRecordConverterDiagnostic[];
 }
 
+export interface WSDLConverterRequest {
+    wsdlContent: string;
+    projectPath: string;
+    portName?: string;
+}
+
+export interface WSDLConverterResponse {
+    textEdits?: any;
+    error?: string;
+}
+
 export interface NoteBookCellOutputParams {
     source: string;
 }
@@ -1995,6 +2006,7 @@ export interface BIInterface extends BaseLangClientInterface {
     addFunction: (params: AddFunctionRequest) => Promise<AddImportItemResponse>;
     convertJsonToRecordType: (params: JsonToRecordParams) => Promise<TypeDataWithReferences>;
     convertXmlToRecordType: (params: XMLToRecordParams) => Promise<TypeDataWithReferences>;
+    generateTypesFromWSDL: (params: WSDLConverterRequest) => Promise<WSDLConverterResponse>;
 
     // AI Agent APIs
     getAllAgents: (params: AINodesRequest) => Promise<AINodesResponse>;

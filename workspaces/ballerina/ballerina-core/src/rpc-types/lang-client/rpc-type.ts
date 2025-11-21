@@ -17,7 +17,7 @@
  * 
  * THIS FILE INCLUDES AUTO GENERATED CODE
  */
-import { BallerinaPackagesParams, BallerinaProjectComponents, BallerinaSTParams, ComponentModels, ComponentModelsParams, ExecutorPositions, PartialST, PartialSTParams, ProjectDiagnosticsRequest, ProjectDiagnosticsResponse, STModifyParams, SymbolInfo, SymbolInfoParams, SyntaxTree, SyntaxTreeParams, TypeFromExpressionParams, TypeFromSymbolParams, TypesFromFnDefinitionParams } from "../../interfaces/extended-lang-client";
+import { BallerinaPackagesParams, BallerinaProjectComponents, BallerinaSTParams, ComponentModels, ComponentModelsParams, ExecutorPositions, PartialST, PartialSTParams, ProjectDiagnosticsRequest, ProjectDiagnosticsResponse, STModifyParams, SymbolInfo, SymbolInfoParams, SyntaxTree, SyntaxTreeParams, TypeFromExpressionParams, TypeFromSymbolParams, TypesFromFnDefinitionParams, WSDLConverterRequest, WSDLConverterResponse } from "../../interfaces/extended-lang-client";
 import { BallerinaVersionResponse, CompletionRequest, CompletionResponse, DiagnosticsResponse, CodeActionRequest, CodeActionResponse, RenameRequest, RenameResponse, DefinitionPositionRequest, UpdateFileContentRequest, UpdateFileContentResponse, DefinitionResponse, ExecutorPositionsRequest, DidCloseRequest, TypesFromExpressionResponse, TypesFromSymbolResponse, DidOpenRequest, DidChangeRequest, SemanticVersion } from "./interfaces";
 import { RequestType, NotificationType } from "vscode-messenger-common";
 
@@ -52,3 +52,4 @@ export const didOpen: NotificationType<DidOpenRequest> = { method: `${_preFix}/d
 export const didChange: NotificationType<DidChangeRequest> = { method: `${_preFix}/didChange` };
 export const didClose: NotificationType<DidCloseRequest> = { method: `${_preFix}/didClose` };
 export const getPackageComponentModels: RequestType<ComponentModelsParams, ComponentModels> = { method: `${_preFix}/getPackageComponentModels` };
+export const generateTypesFromWSDL: RequestType<WSDLConverterRequest, WSDLConverterResponse> = { method: `${_preFix}/generateTypesFromWSDL` };

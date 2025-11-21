@@ -41,9 +41,11 @@ import {
     WorkspaceRootResponse,
     WorkspacesFileResponse,
     WorkspaceTypeResponse,
+    ApplyWorkspaceEditsRequest,
+    ApplyWorkspaceEditsResponse,
 } from "@wso2/ballerina-core";
 import child_process from 'child_process';
-import { Uri, commands, env, window, workspace, MarkdownString } from "vscode";
+import { Uri, commands, env, window, workspace, MarkdownString, WorkspaceEdit, TextEdit, Range, Position } from "vscode";
 import { URI } from "vscode-uri";
 import { extension } from "../../BalExtensionContext";
 import { StateMachine } from "../../stateMachine";
@@ -303,5 +305,36 @@ export class CommonRpcManager implements CommonRPCAPI {
         }
 
         return { type: "UNKNOWN" };
+    }
+
+    async applyWorkspaceEdits(params: ApplyWorkspaceEditsRequest): Promise<ApplyWorkspaceEditsResponse> {
+        try {
+            const workspaceEdit = new WorkspaceEdit();
+            const fileUri = Uri.file(params.filePath);
+
+            // Convert LSP text edits to VS Code text edits
+            for (const edit of params.edits) {
+                const range = new Range(
+                    new Position(edit.range.start.line, edit.range.start.character),
+                    new Position(edit.range.end.line, edit.range.end.character)
+                );
+                const textEdit = new TextEdit(range, edit.newText);
+                workspaceEdit.replace(fileUri, range, edit.newText);
+            }
+
+            // Apply the edits
+            const success = await workspace.applyEdit(workspaceEdit);
+
+            if (success) {
+                return { success: true };
+            } else {
+                return { success: false, error: "Failed to apply workspace edits" };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error occurred while applying edits"
+            };
+        }
     }
 }

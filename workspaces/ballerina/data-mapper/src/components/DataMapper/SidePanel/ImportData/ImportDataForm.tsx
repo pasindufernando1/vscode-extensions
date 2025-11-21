@@ -29,6 +29,7 @@ import { useRpcContext } from '@wso2/ballerina-rpc-client';
 import { useDMIOConfigPanelStore } from "../../../../store/store";
 import { ImportDataButtons } from "./ImportDataButtons";
 import { ImportDataPanel } from "./ImportDataPanel";
+import { ImportWSDLPanel, WSDLData } from "./ImportWSDLPanel";
 import { useShallow } from "zustand/react/shallow";
 
 export interface ImportType {
@@ -39,16 +40,16 @@ export interface ImportType {
 export enum FileExtension {
     JSON = ".json",
     XML = ".xml",
-    CSV = ".csv"
+    CSV = ".csv",
+    WSDL = ".wsdl"
 }
 
 export type ImportDataWizardProps = {
     configName: string;
-    documentUri: string;
 };
 
 export function ImportDataForm(props: ImportDataWizardProps) {
-    const { configName, documentUri } = props;
+    const { configName } = props;
     const { rpcClient } = useRpcContext();
 
     const [selectedImportType, setSelectedImportType] = useState<ImportType>(undefined);
@@ -74,34 +75,101 @@ export function ImportDataForm(props: ImportDataWizardProps) {
                 return FileExtension.XML;
             case 'JSONSCHEMA':
                 return FileExtension.JSON;
+            case 'WSDL':
+                return FileExtension.WSDL;
         }
     }, [selectedImportType]);
 
 
     const loadSchema = async (content: string) => {
-        const request = {
-            documentUri: documentUri,
-            overwriteSchema: overwriteSchema,
-            resourceName: configName + '_' + ioType.toLowerCase() + 'Schema',
-            content: content,
-            ioType: ioType.toUpperCase(),
-            schemaType: selectedImportType.type.toLowerCase(),
-            configName: configName,
+        try {
+            // Get project path from visualizer location
+            const location = await rpcClient.getVisualizerLocation();
+            const documentUri = location.documentUri || "";
+
+            const request = {
+                documentUri: documentUri,
+                overwriteSchema: overwriteSchema,
+                resourceName: configName + '_' + ioType.toLowerCase() + 'Schema',
+                content: content,
+                ioType: ioType.toUpperCase(),
+                schemaType: selectedImportType.type.toLowerCase(),
+                configName: configName,
+            }
+            // await rpcClient.getMiDataMapperRpcClient().browseSchema(request).then(response => {
+            //     setSidePanelOpen(false);
+            //     if (response.success) {
+            //         console.log("Schema imported successfully");
+            //     } else {
+            //         console.error("Error while importing schema");
+            //     }
+            // }).catch(e => {
+            //     console.error("Error while importing schema", e);
+            // });
+        } catch (error) {
+            console.error("Error getting visualizer location:", error);
         }
-        // await rpcClient.getMiDataMapperRpcClient().browseSchema(request).then(response => {
-        //     setSidePanelOpen(false);
-        //     if (response.success) {
-        //         console.log("Schema imported successfully");
-        //     } else {
-        //         console.error("Error while importing schema");
-        //     }
-        // }).catch(e => {
-        //     console.error("Error while importing schema", e);
-        // });
+    };
+
+    const loadWSDLSchema = async (data: WSDLData) => {
+        try {
+            // Get project path from visualizer location
+            const location = await rpcClient.getVisualizerLocation();
+            const projectPath = location.projectPath || "";
+
+            if (!projectPath) {
+                console.error("Project path is not available");
+                return;
+            }
+
+            const wsdlRequest = {
+                wsdlContent: data.wsdlContent,
+                projectPath: projectPath,
+                portName: data.portName
+            };
+
+            const response = await rpcClient.getLangClientRpcClient().generateTypesFromWSDL(wsdlRequest);
+
+            if (response.error) {
+                console.error("Error generating types from WSDL:", response.error);
+            } else {
+                console.log("Types generated successfully from WSDL");
+
+                // Apply text edits if they exist
+                if (response.textEdits && response.textEdits.changes) {
+                    // Iterate through each file that has changes
+                    for (const [fileUri, edits] of Object.entries(response.textEdits.changes)) {
+                        // Convert file URI to file path
+                        const filePath = fileUri.replace('file://', '');
+
+                        try {
+                            const editResult = await rpcClient.getCommonRpcClient().applyWorkspaceEdits({
+                                edits: edits,
+                                filePath: filePath
+                            });
+
+                            if (!editResult.success) {
+                                console.error(`Failed to apply edits to ${filePath}:`, editResult.error);
+                            }
+                        } catch (error) {
+                            console.error(`Error applying edits to ${filePath}:`, error);
+                        }
+                    }
+                }
+
+                setSidePanelOpen(false);
+            }
+        } catch (error) {
+            console.error("Error calling WSDL service:", error);
+        }
     };
 
     const handleFileUpload = (text: string) => {
         loadSchema(text);
+    };
+
+    const handleWSDLUpload = (data: WSDLData) => {
+        loadWSDLSchema(data);
     };
 
     const onClose = () => {
@@ -138,7 +206,15 @@ export function ImportDataForm(props: ImportDataWizardProps) {
             </SidePanelTitleContainer>
             <SidePanelBody>
                 {!selectedImportType && <ImportDataButtons onImportTypeChange={handleImportTypeChange} />}
-                {selectedImportType && (
+                {selectedImportType && selectedImportType.type === 'WSDL' && (
+                    <ImportWSDLPanel
+                        importType={selectedImportType}
+                        extension={fileExtension}
+                        rowRange={{ start: 15, offset: 10 }}
+                        onSave={handleWSDLUpload}
+                    />
+                )}
+                {selectedImportType && selectedImportType.type !== 'WSDL' && (
                     <ImportDataPanel
                         importType={selectedImportType}
                         extension={fileExtension}

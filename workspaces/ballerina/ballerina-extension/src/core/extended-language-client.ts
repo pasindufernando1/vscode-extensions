@@ -74,6 +74,8 @@ import {
     XMLToRecordParams,
     XMLToRecord,
     JsonToRecord,
+    WSDLConverterRequest,
+    WSDLConverterResponse,
     NoteBookCellOutputParams,
     NoteBookCellOutput,
     NotebookFileSource,
@@ -307,6 +309,7 @@ enum EXTENDED_APIS {
     JSON_TO_TYPE_CONVERT = 'typesManager/jsonToType',
     JSON_TO_RECORD_TYPE_CONVERT = 'jsonToRecordTypes/convert',
     XML_TO_RECORD_TYPE_CONVERT = 'xmlToRecordTypes/convert',
+    WSDL_GENERATE_TYPES = 'wsdlService/generateTypesFromWSDL',
     PARTIAL_PARSE_SINGLE_STATEMENT = 'partialParser/getSTForSingleStatement',
     PARTIAL_PARSE_EXPRESSION = 'partialParser/getSTForExpression',
     PARTIAL_PARSE_MODULE_MEMBER = 'partialParser/getSTForModuleMembers',
@@ -972,6 +975,10 @@ export class ExtendedLangClient extends LanguageClient implements ExtendedLangCl
 
     async convertXmlToRecordType(params: XMLToRecordParams): Promise<TypeDataWithReferences> {
         return this.sendRequest(EXTENDED_APIS.XML_TO_RECORD_TYPE_CONVERT, params);
+    }
+
+    async generateTypesFromWSDL(params: WSDLConverterRequest): Promise<WSDLConverterResponse> {
+        return this.sendRequest(EXTENDED_APIS.WSDL_GENERATE_TYPES, params);
     }
 
     async getTypeFromJson(params: JsonToTypeRequest): Promise<JsonToTypeResponse> {

@@ -27,6 +27,7 @@ import AutoMapButton from "./AutoMapButton";
 import ExpressionBarWrapper from "./ExpressionBar";
 import EditButton from "./EditButton";
 import { ActionIconButton } from "./ActionIconButton";
+import { ImportSchemaButtons } from "./ImportSchemaButtons";
 
 export interface DataMapperHeaderProps {
     views: View[];
@@ -66,6 +67,7 @@ export function DataMapperHeader(props: DataMapperHeaderProps) {
                     )}
                 </BreadCrumb>
                 <RightContainer isClickable={!hasEditDisabled}>
+                    <ImportSchemaButtons />
                     <ActionGroupContaner>
                         {undoRedoGroup && undoRedoGroup()}
                         <ActionIconButton

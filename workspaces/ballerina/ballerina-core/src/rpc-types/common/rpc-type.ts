@@ -33,7 +33,9 @@ import {
     FileOrDirRequest,
     WorkspaceRootResponse,
     ShowErrorMessageRequest,
-    WorkspaceTypeResponse
+    WorkspaceTypeResponse,
+    ApplyWorkspaceEditsRequest,
+    ApplyWorkspaceEditsResponse
 } from "./interfaces";
 import { RequestType, NotificationType } from "vscode-messenger-common";
 
@@ -53,3 +55,4 @@ export const getWorkspaceRoot: RequestType<void, WorkspaceRootResponse> = { meth
 export const showErrorMessage: NotificationType<ShowErrorMessageRequest> = { method: `${_preFix}/showErrorMessage` };
 export const getCurrentProjectTomlValues: RequestType<void, void> = { method: `${_preFix}/getCurrentProjectTomlValues` };
 export const getWorkspaceType: RequestType<void, WorkspaceTypeResponse> = { method: `${_preFix}/getWorkspaceType` };
+export const applyWorkspaceEdits: RequestType<ApplyWorkspaceEditsRequest, ApplyWorkspaceEditsResponse> = { method: `${_preFix}/applyWorkspaceEdits` };

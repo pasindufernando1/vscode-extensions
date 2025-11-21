@@ -36,7 +36,8 @@ const importTypes: ImportType[] = [
     { type: "JSON", label: "JSON" },
     { type: "JSONSCHEMA", label: "JSON Schema" },
     { type: "XML", label: "XML" },
-    { type: "CSV", label: "CSV" }
+    { type: "CSV", label: "CSV" },
+    { type: "WSDL", label: "WSDL" }
 ];
 
 interface ImportDataButtonsProps {

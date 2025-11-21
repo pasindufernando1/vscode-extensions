@@ -38,6 +38,7 @@ import {
     TypeFromSymbolParams,
     TypesFromFnDefinitionParams,
     UpdateFileContentRequest,
+    WSDLConverterRequest,
     codeAction,
     definition,
     didChange,
@@ -65,6 +66,7 @@ import {
     getTypeFromExpression,
     getTypeFromSymbol,
     getTypesFromFnDefinition,
+    generateTypesFromWSDL,
     rename,
     stModify,
     updateFileContent,
@@ -105,4 +107,5 @@ export function registerLangClientRpcHandlers(messenger: Messenger) {
     messenger.onNotification(didChange, (args: DidChangeRequest) => rpcManger.didChange(args));
     messenger.onNotification(didClose, (args: DidCloseRequest) => rpcManger.didClose(args));
     messenger.onRequest(getPackageComponentModels, (args: ComponentModelsParams) => rpcManger.getPackageComponentModels(args));
+    messenger.onRequest(generateTypesFromWSDL, (args: WSDLConverterRequest) => rpcManger.generateTypesFromWSDL(args));
 }
